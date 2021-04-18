@@ -1,0 +1,19 @@
+{
+    "name": "david/ads",
+    "require": {
+        "altorouter/altorouter": "^2.0",
+        "cocur/slugify": "^4.0",
+        "symfony/var-dumper": "^5.2"
+    },
+    "authors": [
+        {
+            "name": "Wabon95",
+            "email": "dbonaglia95@protonmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+          "App\\": "src/"
+        }
+    }
+}

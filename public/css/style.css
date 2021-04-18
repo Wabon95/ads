@@ -1,0 +1,9 @@
+body {
+    background-color: #f5f5f5;
+}
+
+form[action="/inscription"],
+form[action="/connexion"] {
+    max-width: 500px;
+    margin: 0 auto;
+}
