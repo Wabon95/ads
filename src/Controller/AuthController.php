@@ -53,20 +53,19 @@ class AuthController extends Controller {
     }
 
     public function profile_treatment() {
-        $user = SessionManager::getConnectedUser();
             if (!empty(strip_tags($_POST['inputActualPassword']))) {
-                if (password_verify(strip_tags($_POST['inputActualPassword']), $user->getPassword())) {
+                if (password_verify(strip_tags($_POST['inputActualPassword']), $this->connectedUser->getPassword())) {
                     // Si l'utilisateur souhaite modifier son mot de passe
                     if ($_POST['inputNewPassword'] !== '' || $_POST['inputNewPasswordConfirm'] !== '') {
                         if ($_POST['inputNewPassword'] == $_POST['inputNewPasswordConfirm']) {
-                            $user->setPassword($_POST['inputNewPassword']);
+                            $this->connectedUser->setPassword($_POST['inputNewPassword']);
                             SessionManager::addFlashMessage("Votre mot de passe a été modifié avec succès. Vous pouvez dès à présent vous reconnecter avec celui ci.", 'success');
                         } else {
                             SessionManager::addFlashMessage("Vos nouveaux mots de passe ne correspondent pas.", 'warning');
                         }
                     } else {
                         // On redéfinit le mot de passe actuel car à l'envoit de la requête SQL le mdp va de nouveau être hashé
-                        $user->setPassword($_POST['inputActualPassword']);
+                        $this->connectedUser->setPassword($_POST['inputActualPassword']);
                     }
 
                     if ($_POST['inputUsername']) $user->setFirstname($_POST['inputUsername']);

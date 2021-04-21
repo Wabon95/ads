@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Util\Database;
+use App\Util\SessionManager;
 
 class User {
 
