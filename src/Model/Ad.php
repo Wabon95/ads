@@ -42,12 +42,12 @@ class Ad {
             ";
             $sthPictures = $db->prepare($sqlPictures);
             $sthPictures->bindValue(':url', $_SERVER['DOCUMENT_ROOT'] . '/img/' . basename($picture['name']), $db::PARAM_STR);
-            $sthPictures->bindValue(':ad', $this->findBySlug($this->getSlug())->getId(), $db::PARAM_INT);
+            $sthPictures->bindValue(':ad', self::findBySlug($this->getSlug())->getId(), $db::PARAM_INT);
             $sthPictures->execute();
         }
     }
 
-    public function findBySlug(string $slug) {
+    public static function findBySlug(string $slug) {
         $db = Database::dbConnect();
         $sql = "
             SELECT *
@@ -71,8 +71,6 @@ class Ad {
         }
         return false;
     }
-
-
 
     // SETTERS
 

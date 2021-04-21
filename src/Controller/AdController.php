@@ -28,5 +28,14 @@ class AdController extends Controller {
             author: SessionManager::getConnectedUser()
         );
         $ad->insert();
+        $this->redirect('/annonce/' . $ad->getSlug());
+    }
+
+    public function viewOne($slug) {
+        $ad = Ad::findBySlug($slug);
+        $this->render('ad.view', [
+            'page_title' => $ad->getSlug(),
+            'ad' => $ad
+        ]);
     }
 }
