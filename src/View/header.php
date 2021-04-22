@@ -38,9 +38,11 @@
                             <li><a class="dropdown-item" href="#">Art & Déco</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/annonce/ajouter">Poster une annonce</a>
-                    </li>
+                    <?php if ($user): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/annonce/ajouter">Poster une annonce</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
                 <ul class="navbar-nav">
                     <?php if ($user): ?>

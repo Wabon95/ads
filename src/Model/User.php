@@ -119,7 +119,7 @@ class User {
 
     // SETTERS
     public function setUsername(string $username) : self {
-        $this->username = strip_tags($username);
+        $this->username = strip_tags(trim($username));
         return $this;
     }
     public function setEmail(string $email) : self {
@@ -127,7 +127,7 @@ class User {
         return $this;
     }
     public function setPassword(string $password) : self {
-        $this->password = strip_tags($password);
+        $this->password = strip_tags(trim($password));
         return $this;
     }
     public function setFirstname(string $firstname) : self {
