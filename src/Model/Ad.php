@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Util\Database;
+use App\Model\Category;
 use App\Util\ImagesUploader;
 
 class Ad {
@@ -14,9 +15,12 @@ class Ad {
         private string $content,
         private string $price,
         private array | null $pictures = null,
-        private User $author,
         private \DateTime | null $created_at = null,
-        private \DateTime | null $updated_at = null
+        private \DateTime | null $updated_at = null,
+
+        // Join
+        private Category | null $category = null,
+        private User $author,
     ) {}
 
     public function insert() {
@@ -50,23 +54,48 @@ class Ad {
     public static function findBySlug(string $slug) {
         $db = Database::dbConnect();
         $sql = "
-            SELECT *
+            SELECT ad.id AS ad_id, ad.slug AS ad_slug, ad.title AS ad_title, ad.content AS ad_content, ad.price AS ad_price, ad.created_at AS ad_created_at, ad.updated_at AS ad_updated_at,
+            user.id AS user_id, user.username AS user_username, user.email AS user_email, user.password AS user_password, user.firstname AS user_firstname,
+            user.lastname AS user_lastname, user.street AS user_street, user.postal_code AS user_postal_code, user.city AS user_city, user.created_at AS user_created_at, user.updated_at AS user_updated_at,
+            category.id AS category_id, category.name AS category_name
             FROM `ad`
+            LEFT JOIN user
+            ON ad.author = user.id
+            LEFT JOIN category
+            ON ad.category = category.id
             WHERE ad.slug = :slug
         ";
         $sth = $db->prepare($sql);
         $sth->bindValue(':slug', $slug, $db::PARAM_STR);
         $sth->execute();
         if ($result = $sth->fetch()) {
+            $category = new Category(
+                id: $result['category_id'],
+                name: $result['category_name']
+            );
+            $author = new User(
+                id: $result['user_id'],
+                username: $result['user_username'],
+                email: $result['user_email'],
+                password: $result['user_password'],
+                firstname: $result['user_firstname'],
+                lastname: $result['user_lastname'],
+                street: $result['user_street'],
+                postal_code: $result['user_postal_code'],
+                city: $result['user_city'],
+                created_at: \DateTime::createFromFormat('Y-m-d H:i:s', $result['user_created_at']),
+                updated_at: (\DateTime::createFromFormat('Y-m-d H:i:s', $result['user_updated_at'])) ? \DateTime::createFromFormat('Y-m-d H:i:s', $result['user_updated_at']) : null
+            );
             return new Ad(
-                id: $result['id'],
-                title: $result['title'],
-                slug: $result['slug'],
-                content: $result['content'],
-                price: $result['price'],
-                author: User::find($result['author']),
-                created_at: \DateTime::createFromFormat('Y-m-d H:i:s', $result['created_at']),
-                updated_at: (\DateTime::createFromFormat('Y-m-d H:i:s', $result['updated_at'])) ? \DateTime::createFromFormat('Y-m-d H:i:s', $result['updated_at']) : null
+                id: $result['ad_id'],
+                title: $result['ad_title'],
+                slug: $result['ad_slug'],
+                content: $result['ad_content'],
+                price: $result['ad_price'],
+                author: $author,
+                category: $category,
+                created_at: \DateTime::createFromFormat('Y-m-d H:i:s', $result['ad_created_at']),
+                updated_at: (\DateTime::createFromFormat('Y-m-d H:i:s', $result['ad_updated_at'])) ? \DateTime::createFromFormat('Y-m-d H:i:s', $result['ad_updated_at']) : null
             );
         }
         return false;
@@ -91,13 +120,28 @@ class Ad {
         return $this->price;
     }
     public function getPictures() {
+        if (!$this->pictures) {
+            $db = Database::dbConnect();
+            $sql = "
+                SELECT * FROM `pictures`
+                WHERE ad = :id
+            ";
+            $sth = $db->prepare($sql);
+            $sth->bindValue(':id', $this->getId(), $db::PARAM_INT);
+            $sth->execute();
+            $this->pictures = $sth->fetchAll();
+            return $this->pictures;
+        }
         return $this->pictures;
+    }
+    public function getCategory() : Category {
+        return $this->category;
     }
     public function getAuthor() {
         return $this->author;
     }
-    public function getCreatedAt() {
-        return $this->created_at;
+    public function getFormatedDate() {
+        return $this->created_at->format('d-m-Y à H:i');
     }
     public function getUpdatedAt() {
         return $this->updated_at;

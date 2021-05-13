@@ -41,7 +41,7 @@ abstract class ImagesUploader {
     public static function upload(array $images) {
         if (self::sizeChecker($images) && self::extensionChecker($images)) {
             foreach($images as $img) {
-                move_uploaded_file($img["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . '/img/' . basename($img["name"]));
+                move_uploaded_file($img["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . IMG_FOLDER . basename($img["name"]));
             }
             return true;
         }
