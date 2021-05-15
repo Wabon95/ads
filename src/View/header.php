@@ -69,8 +69,10 @@
 <div class="container-fluid" style="margin-top: 100px">
 
 <?php
-    if (isset($flashMessages)) {
-        foreach ($flashMessages as $value) {
+    if (isset($flashMessages))
+    {
+        foreach ($flashMessages as $value)
+        {
             echo '<div class="alert alert-' .$value['type']. ' alert-dismissible fade show" role="alert">' .$value['message']. '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>';
         }

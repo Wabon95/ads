@@ -5,7 +5,8 @@ namespace App\Model;
 use App\Util\Database;
 use App\Util\SessionManager;
 
-class User {
+class User
+{
 
     public function __construct(
         private int | null $id = null,
@@ -21,8 +22,10 @@ class User {
         private \DateTime | null $updated_at = null
     ) {}
 
-    public function insert() : bool {
-        if (!self::findByEmail($this->getEmail())) {
+    public function insert() : bool
+    {
+        if (!self::findByEmail($this->getEmail()))
+        {
             $db = Database::dbConnect();
             $sql = "
                 INSERT INTO `user` (username, email, password)
@@ -34,13 +37,16 @@ class User {
             $sth->bindValue(':password', password_hash($this->getPassword(), PASSWORD_BCRYPT), $db::PARAM_STR);
             $sth->execute();
             SessionManager::addFlashMessage('Votre compte a correctement été créé, vous pouvez dès à présent vous connectez avec celui-ci.', 'success');
+
             return true;
         }
         SessionManager::addFlashMessage('Cette addresse email est déjà utilisée.', 'warning');
+
         return false;
     }
     
-    public static function find(int $id) : self | bool {
+    public static function find(int $id) : self | bool
+    {
         $db = Database::dbConnect();
         $sql = "
             SELECT *
@@ -50,7 +56,8 @@ class User {
         $sth = $db->prepare($sql);
         $sth->bindValue(':id', $id, $db::PARAM_INT);
         $sth->execute();
-        if ($result = $sth->fetch()) {
+        if ($result = $sth->fetch())
+        {
             return new User(
                 id: $result['id'],
                 username: $result['username'],
@@ -68,7 +75,8 @@ class User {
         return false;
     }
 
-    public static function findByEmail(string $email) : self | bool {
+    public static function findByEmail(string $email) : self | bool
+    {
         $db = Database::dbConnect();
         $sql = "
             SELECT *
@@ -78,7 +86,8 @@ class User {
         $sth = $db->prepare($sql);
         $sth->bindValue(':email', $email, $db::PARAM_STR);
         $sth->execute();
-        if ($result = $sth->fetch()) {
+        if ($result = $sth->fetch())
+        {
             return new User(
                 id: $result['id'],
                 username: $result['username'],
@@ -96,7 +105,8 @@ class User {
         return false;
     }
 
-    public function update() {
+    public function update()
+    {
         $db = Database::dbConnect();
         $sql = "
             UPDATE `user`
@@ -116,76 +126,123 @@ class User {
         $sth->execute();
     }
 
-
     // SETTERS
-    public function setUsername(string $username) : self {
+    public function setUsername(string $username) : self
+    {
         $this->username = strip_tags(trim($username));
+
         return $this;
     }
-    public function setEmail(string $email) : self {
+
+    public function setEmail(string $email) : self
+    {
         $this->email = strip_tags($email);
+
         return $this;
     }
-    public function setPassword(string $password) : self {
+
+    public function setPassword(string $password) : self
+    {
         $this->password = strip_tags(trim($password));
+
         return $this;
     }
-    public function setFirstname(string $firstname) : self {
+
+    public function setFirstname(string $firstname) : self
+    {
         $this->firstname = strip_tags($firstname);
+
         return $this;
     }
-    public function setLastname(string $lastname) : self {
+
+    public function setLastname(string $lastname) : self
+    {
         $this->lastname = strip_tags($lastname);
+
         return $this;
     }
-    public function setStreet(string $street) : self {
+
+    public function setStreet(string $street) : self
+    {
         $this->street = strip_tags($street);
+
         return $this;
     }
-    public function setPostalCode(string $postal_code) : self {
+
+    public function setPostalCode(string $postal_code) : self
+    {
         $this->postal_code = strip_tags($postal_code);
+
         return $this;
     }
-    public function setCity(string $city) : self {
+
+    public function setCity(string $city) : self
+    {
         $this->city = strip_tags($city);
+
         return $this;
     }
-    public function setUpdatedAt(\DateTime $date) {
+
+    public function setUpdatedAt(\DateTime $date)
+    {
         $this->updated_at = $date;
+
+        return $this;
     }
 
     // GETTERS
-    public function getId() : int {
+    public function getId() : int
+    {
         return $this->id;
     }
-    public function getUsername() : string {
+    
+    public function getUsername() : string
+    {
         return $this->username;
     }
-    public function getEmail() : string {
+
+    public function getEmail() : string
+    {
         return $this->email;
     }
-    public function getPassword() : string {
+
+    public function getPassword() : string
+    {
         return $this->password;
     }
-    public function getFirstname() : string | null {
+
+    public function getFirstname() : string | null
+    {
         return $this->firstname;
     }
-    public function getLastname() : string | null {
+
+    public function getLastname() : string | null
+    {
         return $this->lastname;
     }
-    public function getStreet() : string | null {
+
+    public function getStreet() : string | null
+    {
         return $this->street;
     }
-    public function getPostalCode() : string | null {
+
+    public function getPostalCode() : string | null
+    {
         return $this->postal_code;
     }
-    public function getCity() : string | null {
+
+    public function getCity() : string | null
+    {
         return $this->city;
     }
-    public function getCreatedAt() {
+
+    public function getCreatedAt()
+    {
         return $this->created_at;
     }
-    public function getUpdatedAt() {
+
+    public function getUpdatedAt()
+    {
         return $this->updated_at;
     }
 }

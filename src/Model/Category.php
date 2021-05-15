@@ -4,14 +4,15 @@ namespace App\Model;
 
 use App\Util\Database;
 
-class Category {
-
+class Category
+{
     public function __construct(
         private int | null $id = null,
         private string $name
     ) {}
 
-    public static function getCategories() : array | false {
+    public static function getCategories() : array | false
+    {
         $db = Database::dbConnect();
         $sql = "
             SELECT *
@@ -20,8 +21,10 @@ class Category {
         $sth = $db->prepare($sql);
         $sth->execute();
         $categories = [];
-        if ($result = $sth->fetchAll()) {
-            foreach($result as $category) {
+        if ($result = $sth->fetchAll())
+        {
+            foreach($result as $category)
+            {
                 $categories[] = new Category(
                     id: $category['id'],
                     name: $category['name'],
@@ -32,7 +35,8 @@ class Category {
         return false;
     }
 
-    public function getName() : string {
+    public function getName() : string
+    {
         return $this->name;
     }
 }

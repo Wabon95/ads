@@ -6,8 +6,8 @@ use App\Util\Database;
 use App\Model\Category;
 use App\Util\ImagesUploader;
 
-class Ad {
-
+class Ad
+{
     public function __construct(
         private int | null $id = null,
         private string $title,
@@ -23,7 +23,8 @@ class Ad {
         private User $author,
     ) {}
 
-    public function insert() {
+    public function insert()
+    {
         $db = Database::dbConnect();
         $sql = "
             INSERT INTO `ad` (title, slug, content, price, author)
@@ -35,11 +36,13 @@ class Ad {
         $sth->bindValue(':content', $this->getContent(), $db::PARAM_STR);
         $sth->bindValue(':price',$this->getPrice(), $db::PARAM_INT);
         $sth->bindValue(':author',$this->getAuthor()->getId(), $db::PARAM_INT);
-        if ($sth->execute()) {
+        if ($sth->execute())
+        {
             ImagesUploader::upload($this->getPictures());
         }
 
-        foreach ($this->getPictures() as $picture) {
+        foreach ($this->getPictures() as $picture)
+        {
             $sqlPictures = "
                 INSERT INTO `pictures` (url, ad)
                 VALUES (:url, :ad)
@@ -51,7 +54,8 @@ class Ad {
         }
     }
 
-    public static function findBySlug(string $slug) {
+    public static function findBySlug(string $slug)
+    {
         $db = Database::dbConnect();
         $sql = "
             SELECT ad.id AS ad_id, ad.slug AS ad_slug, ad.title AS ad_title, ad.content AS ad_content, ad.price AS ad_price, ad.created_at AS ad_created_at, ad.updated_at AS ad_updated_at,
@@ -68,7 +72,8 @@ class Ad {
         $sth = $db->prepare($sql);
         $sth->bindValue(':slug', $slug, $db::PARAM_STR);
         $sth->execute();
-        if ($result = $sth->fetch()) {
+        if ($result = $sth->fetch())
+        {
             $category = new Category(
                 id: $result['category_id'],
                 name: $result['category_name']
@@ -104,23 +109,35 @@ class Ad {
     // SETTERS
 
     // GETTERS
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
-    public function getTitle() {
+
+    public function getTitle()
+    {
         return $this->title;
     }
-    public function getSlug() {
+
+    public function getSlug()
+    {
         return $this->slug;
     }
-    public function getContent() {
+
+    public function getContent()
+    {
         return $this->content;
     }
-    public function getPrice() {
+
+    public function getPrice()
+    {
         return $this->price;
     }
-    public function getPictures() {
-        if (!$this->pictures) {
+
+    public function getPictures()
+    {
+        if (!$this->pictures)
+        {
             $db = Database::dbConnect();
             $sql = "
                 SELECT * FROM `pictures`
@@ -130,21 +147,29 @@ class Ad {
             $sth->bindValue(':id', $this->getId(), $db::PARAM_INT);
             $sth->execute();
             $this->pictures = $sth->fetchAll();
+
             return $this->pictures;
         }
         return $this->pictures;
     }
-    public function getCategory() : Category {
+
+    public function getCategory() : Category
+    {
         return $this->category;
     }
-    public function getAuthor() {
+
+    public function getAuthor()
+    {
         return $this->author;
     }
-    public function getFormatedDate() {
+
+    public function getFormatedDate()
+    {
         return $this->created_at->format('d-m-Y à H:i');
     }
-    public function getUpdatedAt() {
+    
+    public function getUpdatedAt()
+    {
         return $this->updated_at;
     }
-
 }

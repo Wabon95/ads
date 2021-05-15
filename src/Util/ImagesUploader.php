@@ -20,6 +20,7 @@ abstract class ImagesUploader {
         foreach ($images as $img) {
             if ($img['size'] > 5000000) {
                 SessionManager::addFlashMessage('La taille des images ne doit pas dépasser 5Mo.', 'warning');
+
                 return false;
             }
         }
@@ -32,13 +33,14 @@ abstract class ImagesUploader {
             $fileExtension = strtolower(pathinfo($img['name'], PATHINFO_EXTENSION));
             if (!in_array($fileExtension, $allowedExtensions)) {
                 SessionManager::addFlashMessage('Le format des fichiers envoyé doit être .jpg ou .png', 'warning');
+
                 return false;
             }
         }
         return true;
     }
 
-    public static function upload(array $images) {
+    public static function upload(array $images) : bool {
         if (self::sizeChecker($images) && self::extensionChecker($images)) {
             foreach($images as $img) {
                 move_uploaded_file($img["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . IMG_FOLDER . basename($img["name"]));

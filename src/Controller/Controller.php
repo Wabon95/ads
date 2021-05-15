@@ -5,15 +5,17 @@ namespace App\Controller;
 use App\Model\User;
 use App\Util\SessionManager;
 
-class Controller {
-
+class Controller
+{
     protected User | bool $connectedUser;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->connectedUser = SessionManager::getConnectedUser();
     }
 
-    protected function render(string $view, ?array $data) {
+    protected function render(string $view, ?array $data)
+    {
         $view = str_replace('.', '/', $view);
         extract($data);
         $flashMessages = SessionManager::getAndRemoveAllFlashMessages();

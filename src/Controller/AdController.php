@@ -8,16 +8,18 @@ use Cocur\Slugify\Slugify;
 use App\Util\ImagesUploader;
 use App\Util\SessionManager;
 
-class AdController extends Controller {
-
-    public function add_view() {
+class AdController extends Controller
+{
+    public function addView()
+    {
         $this->render('ad.add', [
             'page_title' => 'Accueil',
             'categories' => Category::getCategories()
         ]);
     }
 
-    public function add_treatment() {
+    public function addTreatment()
+    {
         $slugify = new Slugify();
         $ad = new Ad(
             title: strip_tags($_POST['inputTitle']),
@@ -31,11 +33,15 @@ class AdController extends Controller {
         $this->redirect('/annonce/' . $ad->getSlug());
     }
 
-    public function viewOne($slug) {
-        $ad = Ad::findBySlug($slug);
-        $this->render('ad.view', [
-            'page_title' => $ad->getSlug(),
-            'ad' => $ad
-        ]);
+    public function viewOne($slug)
+    {
+        $ad = (Ad::findBySlug($slug)) ? Ad::findBySlug($slug) : false;
+        if ($ad)
+        {
+            $this->render('ad.view', [
+                'page_title' => $ad->getSlug(),
+                'ad' => $ad
+            ]);
+        }
     }
 }
