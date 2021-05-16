@@ -36,8 +36,7 @@ class AdController extends Controller
     public function viewOne($slug)
     {
         $ad = (Ad::findBySlug($slug)) ? Ad::findBySlug($slug) : false;
-        if ($ad)
-        {
+        if ($ad) {
             $this->render('ad.view', [
                 'page_title' => $ad->getSlug(),
                 'ad' => $ad

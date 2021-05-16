@@ -8,10 +8,8 @@ abstract class SessionManager
 {
     public static function connectUser(string $email, string $password) : bool | User
     {
-        if ($user = User::findByEmail(strip_tags($email)))
-        {
-            if (password_verify(strip_tags($password), $user->getPassword()))
-            {
+        if ($user = User::findByEmail(strip_tags($email))) {
+            if (password_verify(strip_tags($password), $user->getPassword())) {
                 $_SESSION['user'] = [
                     'email' => $user->getEmail()
                 ];
@@ -29,8 +27,7 @@ abstract class SessionManager
 
     public static function getConnectedUser() : User | bool
     {
-        if (isset($_SESSION['user']))
-        {
+        if (isset($_SESSION['user'])) {
             return User::findByEmail($_SESSION['user']['email']);
         }
         return false;
@@ -38,8 +35,7 @@ abstract class SessionManager
 
     public static function disconnectUser()
     {
-        if (isset($_SESSION['user']))
-        {
+        if (isset($_SESSION['user'])) {
             unset($_SESSION['user']);
         }
     }
@@ -54,8 +50,7 @@ abstract class SessionManager
 
     public static function getAndRemoveAllFlashMessages()
     {
-        if (isset($_SESSION['flashMessages']))
-        {
+        if (isset($_SESSION['flashMessages'])) {
             $messages = $_SESSION['flashMessages'];
             unset($_SESSION['flashMessages']);
 

@@ -21,10 +21,8 @@ class Category
         $sth = $db->prepare($sql);
         $sth->execute();
         $categories = [];
-        if ($result = $sth->fetchAll())
-        {
-            foreach($result as $category)
-            {
+        if ($result = $sth->fetchAll()) {
+            foreach($result as $category) {
                 $categories[] = new Category(
                     id: $category['id'],
                     name: $category['name'],

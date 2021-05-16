@@ -36,13 +36,11 @@ class Ad
         $sth->bindValue(':content', $this->getContent(), $db::PARAM_STR);
         $sth->bindValue(':price',$this->getPrice(), $db::PARAM_INT);
         $sth->bindValue(':author',$this->getAuthor()->getId(), $db::PARAM_INT);
-        if ($sth->execute())
-        {
+        if ($sth->execute()) {
             ImagesUploader::upload($this->getPictures());
         }
 
-        foreach ($this->getPictures() as $picture)
-        {
+        foreach ($this->getPictures() as $picture) {
             $sqlPictures = "
                 INSERT INTO `pictures` (url, ad)
                 VALUES (:url, :ad)
@@ -72,8 +70,7 @@ class Ad
         $sth = $db->prepare($sql);
         $sth->bindValue(':slug', $slug, $db::PARAM_STR);
         $sth->execute();
-        if ($result = $sth->fetch())
-        {
+        if ($result = $sth->fetch()) {
             $category = new Category(
                 id: $result['category_id'],
                 name: $result['category_name']
@@ -136,8 +133,7 @@ class Ad
 
     public function getPictures()
     {
-        if (!$this->pictures)
-        {
+        if (!$this->pictures) {
             $db = Database::dbConnect();
             $sql = "
                 SELECT * FROM `pictures`

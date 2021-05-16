@@ -24,8 +24,7 @@ class User
 
     public function insert() : bool
     {
-        if (!self::findByEmail($this->getEmail()))
-        {
+        if (!self::findByEmail($this->getEmail())) {
             $db = Database::dbConnect();
             $sql = "
                 INSERT INTO `user` (username, email, password)
@@ -56,8 +55,7 @@ class User
         $sth = $db->prepare($sql);
         $sth->bindValue(':id', $id, $db::PARAM_INT);
         $sth->execute();
-        if ($result = $sth->fetch())
-        {
+        if ($result = $sth->fetch()) {
             return new User(
                 id: $result['id'],
                 username: $result['username'],
@@ -86,8 +84,7 @@ class User
         $sth = $db->prepare($sql);
         $sth->bindValue(':email', $email, $db::PARAM_STR);
         $sth->execute();
-        if ($result = $sth->fetch())
-        {
+        if ($result = $sth->fetch()) {
             return new User(
                 id: $result['id'],
                 username: $result['username'],

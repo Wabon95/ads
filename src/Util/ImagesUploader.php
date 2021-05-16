@@ -4,7 +4,8 @@ namespace App\Util;
 
 abstract class ImagesUploader {
 
-    public static function reMakeArray(array $images) {
+    public static function reMakeArray(array $images)
+    {
         $file_array = array();
         $file_count = count($images['name']);
         $file_keys = array_keys($images);
@@ -16,7 +17,8 @@ abstract class ImagesUploader {
         return $file_array;
     }
 
-    private static function sizeChecker(array $images) : bool {
+    private static function sizeChecker(array $images) : bool
+    {
         foreach ($images as $img) {
             if ($img['size'] > 5000000) {
                 SessionManager::addFlashMessage('La taille des images ne doit pas dépasser 5Mo.', 'warning');
@@ -27,7 +29,8 @@ abstract class ImagesUploader {
         return true;
     }
 
-    private static function extensionChecker(array $images) : bool {
+    private static function extensionChecker(array $images) : bool
+    {
         foreach($images as $img) {
             $allowedExtensions = ['jpg', 'png'];
             $fileExtension = strtolower(pathinfo($img['name'], PATHINFO_EXTENSION));
@@ -40,7 +43,8 @@ abstract class ImagesUploader {
         return true;
     }
 
-    public static function upload(array $images) : bool {
+    public static function upload(array $images) : bool
+    {
         if (self::sizeChecker($images) && self::extensionChecker($images)) {
             foreach($images as $img) {
                 move_uploaded_file($img["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . IMG_FOLDER . basename($img["name"]));
