@@ -27,8 +27,8 @@ class Ad
     {
         $db = Database::dbConnect();
         $sql = "
-            INSERT INTO `ad` (title, slug, content, price, author)
-            VALUES (:title, :slug, :content, :price, :author)
+            INSERT INTO `ad` (title, slug, content, price, author, category)
+            VALUES (:title, :slug, :content, :price, :author, :category)
         ";
         $sth = $db->prepare($sql);
         $sth->bindValue(':title', $this->getTitle(), $db::PARAM_STR);
@@ -36,6 +36,7 @@ class Ad
         $sth->bindValue(':content', $this->getContent(), $db::PARAM_STR);
         $sth->bindValue(':price',$this->getPrice(), $db::PARAM_INT);
         $sth->bindValue(':author',$this->getAuthor()->getId(), $db::PARAM_INT);
+        $sth->bindValue(':category',$this->getCategory()->getId(), $db::PARAM_INT);
         if ($sth->execute()) {
             ImagesUploader::upload($this->getPictures());
         }
@@ -47,8 +48,12 @@ class Ad
             ";
             $sthPictures = $db->prepare($sqlPictures);
             $sthPictures->bindValue(':url', $_SERVER['DOCUMENT_ROOT'] . '/img/' . basename($picture['name']), $db::PARAM_STR);
-            $sthPictures->bindValue(':ad', self::findBySlug($this->getSlug())->getId(), $db::PARAM_INT);
+            // dump(self::findBySlug($this->getSlug())->getId());
+            // dump($db->lastInsertId());
+            // $sthPictures->bindValue(':ad', self::findBySlug($this->getSlug())->getId(), $db::PARAM_INT);
+            $sthPictures->bindValue(':ad', $db->lastInsertId(), $db::PARAM_INT);
             $sthPictures->execute();
+            // die;
         }
     }
 
@@ -71,10 +76,6 @@ class Ad
         $sth->bindValue(':slug', $slug, $db::PARAM_STR);
         $sth->execute();
         if ($result = $sth->fetch()) {
-            $category = new Category(
-                id: $result['category_id'],
-                name: $result['category_name']
-            );
             $author = new User(
                 id: $result['user_id'],
                 username: $result['user_username'],
@@ -95,7 +96,7 @@ class Ad
                 content: $result['ad_content'],
                 price: $result['ad_price'],
                 author: $author,
-                category: $category,
+                category: Category::findByName($result['category_name']),
                 created_at: \DateTime::createFromFormat('Y-m-d H:i:s', $result['ad_created_at']),
                 updated_at: (\DateTime::createFromFormat('Y-m-d H:i:s', $result['ad_updated_at'])) ? \DateTime::createFromFormat('Y-m-d H:i:s', $result['ad_updated_at']) : null
             );

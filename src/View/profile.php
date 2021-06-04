@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-4">
                 <div class="form-group">
-                    <label for="inputEmail" class="mb-2">Adresses email</label>
+                    <label for="inputEmail" class="mb-2">Adresse email</label>
                     <input type="email" class="form-control" name="inputEmail" id="inputEmail" aria-describedby="emailHelp" value="<?= $user->getEmail() ?>" disabled>
                     <small id="emailHelp" class="form-text text-muted">Vous ne pouvez pas changer votre adresse email.</small>
                 </div>

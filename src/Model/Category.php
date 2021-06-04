@@ -33,8 +33,33 @@ class Category
         return false;
     }
 
+    public static function findByName(string $name) : self | bool
+    {
+        $db = Database::dbConnect();
+        $sql = "
+            SELECT *
+            FROM `category`
+            WHERE name = :name
+        ";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':name', $name, $db::PARAM_STR);
+        $stmt->execute();
+        if ($result = $stmt->fetch()) {
+            return new Category(
+                id: $result['id'],
+                name: $result['name']
+            );
+        }
+        return false;
+    }
+
     public function getName() : string
     {
         return $this->name;
+    }
+    
+    public function getId() : int
+    {
+        return $this->id;
     }
 }

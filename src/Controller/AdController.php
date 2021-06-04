@@ -27,7 +27,8 @@ class AdController extends Controller
             content: strip_tags($_POST['textareaContent']),
             price: strip_tags($_POST['inputPrice']),
             pictures: ImagesUploader::reMakeArray($_FILES['inputFiles']),
-            author: $this->connectedUser
+            author: $this->connectedUser,
+            category: Category::findByName(strip_tags($_POST['selectCategory']))
         );
         $ad->insert();
         $this->redirect('/annonce/' . $ad->getSlug());
