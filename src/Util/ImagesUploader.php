@@ -19,8 +19,9 @@ abstract class ImagesUploader {
 
     private static function sizeChecker(array $images) : bool
     {
+        $maxFileSize = 5000000; // 5Mo
         foreach ($images as $img) {
-            if ($img['size'] > 5000000) {
+            if ($img['size'] > $maxFileSize) {
                 SessionManager::addFlashMessage('La taille des images ne doit pas dépasser 5Mo.', 'warning');
 
                 return false;

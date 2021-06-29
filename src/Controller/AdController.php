@@ -42,6 +42,8 @@ class AdController extends Controller
                 'page_title' => $ad->getSlug(),
                 'ad' => $ad
             ]);
+        } else {
+            $this->redirect('/');
         }
     }
 }

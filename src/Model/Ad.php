@@ -47,13 +47,10 @@ class Ad
                 VALUES (:url, :ad)
             ";
             $sthPictures = $db->prepare($sqlPictures);
-            $sthPictures->bindValue(':url', $_SERVER['DOCUMENT_ROOT'] . '/img/' . basename($picture['name']), $db::PARAM_STR);
-            // dump(self::findBySlug($this->getSlug())->getId());
-            // dump($db->lastInsertId());
-            // $sthPictures->bindValue(':ad', self::findBySlug($this->getSlug())->getId(), $db::PARAM_INT);
-            $sthPictures->bindValue(':ad', $db->lastInsertId(), $db::PARAM_INT);
+            $sthPictures->bindValue(':url', $_SERVER['DOCUMENT_ROOT'] . IMG_FOLDER . basename($picture['name']), $db::PARAM_STR);
+            $sthPictures->bindValue(':ad', self::findBySlug($this->getSlug())->getId(), $db::PARAM_INT);
+            // $sthPictures->bindValue(':ad', $db->lastInsertId(), $db::PARAM_INT);
             $sthPictures->execute();
-            // die;
         }
     }
 

@@ -6,7 +6,7 @@
         <?php endif; ?>
         </div>
         <h1><?= $ad->getTitle() ?></h1>
-        <small>Publié le <?= $ad->getFormatedDate() ?> dans <strong><?= $ad->getCategory()->getName() ?></strong> par <strong><?= $ad->getAuthor()->getUsername() ?></strong></small>\
+        <small>Publié le <?= $ad->getFormatedDate() ?> dans <strong><?= $ad->getCategory()->getName() ?></strong> par <strong><?= $ad->getAuthor()->getUsername() ?></strong></small>
         <p class="card-text mb-auto"><?= $ad->getContent() ?></p>
     </header>
 </article>
